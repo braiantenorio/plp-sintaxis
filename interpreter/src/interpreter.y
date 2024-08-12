@@ -12,6 +12,9 @@
 
 %token NL         // nueva línea
 %token CONSTANT   // constante
+%token WORLD
+%token ACTION
+%token ENTITY
 
 %%
 

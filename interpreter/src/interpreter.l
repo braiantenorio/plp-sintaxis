@@ -31,22 +31,31 @@ package org.unp.plp.interprete;
 
 %}
 
+
+ENTITIES = ("gold"|"pit"|"wumpus"|"hero")
+
+
+
 %%
 
-[0-9]+
-   {  yyparser.yylval = new Integer(yytext());
-      return Parser.CONSTANT;
-   }
+\world          {return Parser.WORLD }
 
-\r|\n|\r\n
-  { // lleva la cuenta de lineas
-    yyline++ ;
-    return Parser.NL;
-  }
 
-[ \t]+ {  /** accion vacia: se ignoran los espacios y tabuladores **/
-       }
+{ENTITIES}      {return Parser.ENTITY}
 
-.      {  /** token desconocido: se produce un mensaje de error **/
-          yyparser.yyerror("El lexema '"+yytext()+"' no corresponden a ningún token conocido");
-       }
+[0-9]+          {  
+                  yyparser.yylval = new Integer(yytext());
+                  return Parser.CONSTANT;
+                }
+
+\r|\n|\r\n      { // lleva la cuenta de lineas
+                  yyline++ ;
+                  return Parser.NL;
+                }
+
+[ \t]+          { /** accion vacia: se ignoran los espacios y tabuladores **/ }
+
+
+.               {  /** token desconocido: se produce un mensaje de error **/
+                    yyparser.yyerror("El lexema '"+yytext()+"' no corresponden a ningún token conocido");
+                }
