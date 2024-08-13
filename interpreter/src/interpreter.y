@@ -30,6 +30,7 @@ statement_list
 
 statement
   : CONSTANT NL {System.out.println("constante: "+ $1); $$ = $1;}
+  | ACTION ENTITY CONSTANT CONSTANT NL {System.out.println("action: "+ $1); $$ = $1;}
   ;
 
 

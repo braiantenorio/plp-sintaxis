@@ -34,14 +34,25 @@ package org.unp.plp.interprete;
 
 ENTITIES = ("gold"|"pit"|"wumpus"|"hero")
 
+ACTIONS = ("put"|"rem")
+
 
 
 %%
 
-\world          {return Parser.WORLD }
+\world          {return Parser.WORLD; }
 
 
-{ENTITIES}      {return Parser.ENTITY}
+{ENTITIES}      {
+                  yyparser.yylval = yytext();
+                  return Parser.ENTITY;
+                }
+
+{ACTIONS}       {
+                  yyparser.yylval = yytext();
+                  return Parser.ACTION;
+                }
+
 
 [0-9]+          {  
                   yyparser.yylval = new Integer(yytext());
