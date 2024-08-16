@@ -13,8 +13,12 @@
 %token NL         // nueva línea
 %token CONSTANT   // constante
 %token WORLD
-%token ACTION
-%token ENTITY
+%token PUT
+%token REM
+%token PIT
+%token GOLD
+%token HERO
+%token WUMPUS
 %token X
 %token IN
 %token LBRACKET
@@ -25,8 +29,8 @@
 %%
 
 program
-  : statement_list            // Lista de sentencias
-  |                           // Programa vacio
+  : world_statement statement_list        // Lista de sentencias
+  |                                       // Programa vacio
   ;
 
 statement_list
@@ -36,10 +40,15 @@ statement_list
 
 statement
   : CONSTANT NL {System.out.println("constante: "+ $1); $$ = $1;}
-  | WORLD CONSTANT X CONSTANT NL {world.test();}
-  | ACTION ENTITY IN LBRACKET CONSTANT COMMA CONSTANT RBRACKET NL {System.out.println("action: "+ $1); $$ = $1;}
+  | PUT item IN '[' CONSTANT ',' CONSTANT ']' NL {System.out.println("put de: "+ $2);}
+  | REM item IN '[' CONSTANT ',' CONSTANT ']' NL {System.out.println("rem de: "+ $2);}
   ;
 
+  item : GOLD | HERO | WUMPUS | PIT ;
+
+world_statement
+  : WORLD CONSTANT 'x' CONSTANT NL {System.out.println("setea mundo");}
+  ;
 
 %%
 

@@ -32,38 +32,40 @@ package org.unp.plp.interprete;
 %}
 
 
-ENTITIES = ("gold"|"pit"|"wumpus"|"hero")
-
-ACTIONS = ("put"|"rem")
-
-
-
 %%
 
 "world"         {return Parser.WORLD; }
-"x"             { return Parser.X; }
+
+"put"           {return Parser.PUT;}
+"rem"           {return Parser.REM;}
+
+"hero"          {
+                  yyparser.yylval = yytext();
+                  return Parser.HERO;
+                }
+
+"wumpus"        {
+                  yyparser.yylval = yytext();
+                  return Parser.WUMPUS;
+                }
+
+"gold"          {
+                  yyparser.yylval = yytext();
+                  return Parser.GOLD;
+                }
+                
+"pit"           {
+                  yyparser.yylval = yytext();
+                  return Parser.PIT;
+                }
+
 "in"            { return Parser.IN; }
 
-"["             { return Parser.LBRACKET; }
-"]"             { return Parser.RBRACKET; }
-","             { return Parser.COMMA; }
 "print"         { return Parser.PRINT; }
 
 
-
-{ENTITIES}      {
-                  yyparser.yylval = yytext();
-                  return Parser.ENTITY;
-                }
-
-{ACTIONS}       {
-                  yyparser.yylval = yytext();
-                  return Parser.ACTION;
-                }
-
-
 [0-9]+          {  
-                  yyparser.yylval = new Integer(yytext());
+                  yyparser.yylval = Integer.valueOf(yytext());
                   return Parser.CONSTANT;
                 }
 
@@ -71,6 +73,13 @@ ACTIONS = ("put"|"rem")
                   yyline++ ;
                   return Parser.NL;
                 }
+
+[+\-*/\[\],;:><=\?ijx] {
+                          /** Deja pasar los caracteres únicos como literales **/
+                          /** No es ninguna expresión regular, sólo los caracteres literales **/
+                          yyparser.yylval = yytext();
+                          return yytext().charAt(0);
+                        }
 
 [ \t]+          { /** accion vacia: se ignoran los espacios y tabuladores **/ }
 
