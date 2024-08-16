@@ -15,6 +15,12 @@
 %token WORLD
 %token ACTION
 %token ENTITY
+%token X
+%token IN
+%token LBRACKET
+%token RBRACKET
+%token COMMA
+%token PRINT
 
 %%
 
@@ -30,7 +36,8 @@ statement_list
 
 statement
   : CONSTANT NL {System.out.println("constante: "+ $1); $$ = $1;}
-  | ACTION ENTITY CONSTANT CONSTANT NL {System.out.println("action: "+ $1); $$ = $1;}
+  | WORLD CONSTANT X CONSTANT NL {world.test();}
+  | ACTION ENTITY IN LBRACKET CONSTANT COMMA CONSTANT RBRACKET NL {System.out.println("action: "+ $1); $$ = $1;}
   ;
 
 

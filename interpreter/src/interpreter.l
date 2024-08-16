@@ -40,7 +40,15 @@ ACTIONS = ("put"|"rem")
 
 %%
 
-\world          {return Parser.WORLD; }
+"world"         {return Parser.WORLD; }
+"x"             { return Parser.X; }
+"in"            { return Parser.IN; }
+
+"["             { return Parser.LBRACKET; }
+"]"             { return Parser.RBRACKET; }
+","             { return Parser.COMMA; }
+"print"         { return Parser.PRINT; }
+
 
 
 {ENTITIES}      {
