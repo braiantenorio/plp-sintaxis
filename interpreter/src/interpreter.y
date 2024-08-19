@@ -40,11 +40,45 @@ statement_list
 
 statement
   : CONSTANT NL {System.out.println("constante: "+ $1); $$ = $1;}
-  | PUT item IN '[' CONSTANT ',' CONSTANT ']' NL {System.out.println("put de: "+ $2);}
-  | REM item IN '[' CONSTANT ',' CONSTANT ']' NL {System.out.println("rem de: "+ $2);}
+  | PUT item IN celdas NL {System.out.println("put de: "+ $2);}
+  | REM item IN celdas NL {System.out.println("rem de: "+ $2);}
   ;
 
-  item : GOLD | HERO | WUMPUS | PIT ;
+celdas
+  : '[' CONSTANT ',' CONSTANT ']'
+  | '[' aux ',' aux ':' condition_list']'
+  ;
+
+item : GOLD | HERO | WUMPUS | PIT ;
+
+aux: '?' | CONSTANT ;
+
+condition_list : condition ',' condition_list
+  | condition ;
+
+relation
+  : expr op_rel expr
+  ;
+
+expr
+  : expr op_add term
+  | term
+  ;
+
+term 
+  : term op_mult factor
+  | factor
+  ;
+
+factor
+  : CONSTANT
+  | var
+  ;
+
+var : 'i' | 'j';
+op_add : 'x' | '-' ; 
+op_mult : '*' | '/' ;
+op_rel : '==' | '<' ;
 
 world_statement
   : WORLD CONSTANT 'x' CONSTANT NL {System.out.println("setea mundo");}
