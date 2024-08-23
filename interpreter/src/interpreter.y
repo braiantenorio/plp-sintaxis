@@ -42,14 +42,19 @@ statement
   : CONSTANT NL {System.out.println("constante: "+ $1); $$ = $1;}
   | PUT item IN celdas NL {System.out.println("put de: "+ $2);}
   | REM item IN celdas NL {System.out.println("rem de: "+ $2);}
-  ;
+  | PUT unique_item IN celda NL {System.out.println("put de item unico");} 
+  | REM unique_item IN celda NL {System.out.println("rem de item unico");}
+  | 'print' WORLD NL {world.print();}
+  ; 
 
 celdas
   : '[' CONSTANT ',' CONSTANT ']'
   | '[' aux ',' aux ':' condition_list']'
   ;
 
-item : GOLD | HERO | WUMPUS | PIT ;
+item : PIT ;
+
+unique_item : GOLD | HERO | WUMPUS ;
 
 aux: '?' | CONSTANT ;
 
@@ -81,7 +86,7 @@ op_mult : '*' | '/' ;
 op_rel : '==' | '<' ;
 
 world_statement
-  : WORLD CONSTANT 'x' CONSTANT NL {System.out.println("setea mundo");}
+  : WORLD CONSTANT 'x' CONSTANT NL {world.crear((int)$2,(int)$4);}
   ;
 
 %%
