@@ -1,10 +1,11 @@
 // fuente byaccj para una calculadora sencilla
 
-
 %{
   import java.io.*;
   import java.util.List;
   import java.util.ArrayList;
+  import java.util.Set;
+  import java.util.HashSet;
 %}
 
 
@@ -40,16 +41,20 @@ statement_list
 
 statement
   : CONSTANT NL {System.out.println("constante: "+ $1); $$ = $1;}
-  | PUT item IN celdas NL {System.out.println("put de: "+ $2);}
+  | PUT item IN celdas NL {world.put((String)$2,(Set<Cell>)$4);}
   | REM item IN celdas NL {System.out.println("rem de: "+ $2);}
-  | PUT unique_item IN celda NL {System.out.println("put de item unico");} 
+  | PUT unique_item IN celda NL {world.put((String)$2,(Cell)$4);System.out.println("put de item unico");} 
   | REM unique_item IN celda NL {System.out.println("rem de item unico");}
   | 'print' WORLD NL {world.print();}
   ; 
 
 celdas
-  : '[' CONSTANT ',' CONSTANT ']'
-  | '[' aux ',' aux ':' condition_list']'
+  : '[' CONSTANT ',' CONSTANT ']' { Cell celda = new Cell((int)$2,(int)$4);Set<Cell> set = new HashSet<>();set.add(celda); $$= set;}
+  | '[' aux ',' aux ':' relation_list']' {$$= $6;}
+  ;
+
+celda
+  : '[' CONSTANT ',' CONSTANT ']' { $$= new Cell((int)$2,(int)$4);}
   ;
 
 item : PIT ;
@@ -58,11 +63,13 @@ unique_item : GOLD | HERO | WUMPUS ;
 
 aux: '?' | CONSTANT ;
 
-condition_list : condition ',' condition_list
-  | condition ;
+relation_list 
+  : relation ',' relation_list
+  | relation 
+  ;
 
 relation
-  : expr op_rel expr
+  : expr op_rel expr{ //aca llama al metodo que }
   ;
 
 expr
@@ -76,14 +83,32 @@ term
   ;
 
 factor
-  : CONSTANT
+  : CONSTANT { $$ = world.getConstant((int)$1);}
   | var
   ;
 
-var : 'i' | 'j';
-op_add : 'x' | '-' ; 
-op_mult : '*' | '/' ;
-op_rel : '==' | '<' ;
+var 
+  : 'i' {$$ = world.getI();}
+  | 'j' {$$= world.getJ();}
+  ;
+
+op_add 
+  : 'x' 
+  | '-' { cada uno deberia devolver el binary oprator correspondiente}
+  ;  
+
+op_mult 
+  : '*' 
+  | '/' 
+  ;
+
+op_rel 
+  : '==' 
+  | '<' 
+  | '>'
+  | '>=' 
+  | '<=' 
+  ;
 
 world_statement
   : WORLD CONSTANT 'x' CONSTANT NL {world.crear((int)$2,(int)$4);}
@@ -91,14 +116,12 @@ world_statement
 
 %%
 
-  /** referencia al analizador léxico
-  **/
+  /** referencia al analizador léxico **/
   private Lexer lexer ;
 
   private WumpusWorld world;
 
-  /** constructor: crea el Interpreteranalizador léxico (lexer)
-  **/
+  /** constructor: crea el Interpreteranalizador léxico (lexer) **/
   public Parser(Reader r)
   {
      lexer = new Lexer(r, this);
@@ -125,8 +148,7 @@ world_statement
     return yyl_return;
   }
 
-  /** invocada cuando se produce un error
-  **/
+  /** invocada cuando se produce un error **/
   public void yyerror (String descripcion, int yystate, int token)
   {
      System.err.println ("Error en línea "+Integer.toString(lexer.lineaActual())+" : "+descripcion);
