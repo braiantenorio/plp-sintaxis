@@ -6,6 +6,8 @@
   import java.util.ArrayList;
   import java.util.Set;
   import java.util.HashSet;
+  import java.util.function.BinaryOperator;
+  import java.util.function.BiPredicate;
 %}
 
 
@@ -40,12 +42,11 @@ statement_list
   ;
 
 statement
-  : CONSTANT NL {System.out.println("constante: "+ $1); $$ = $1;}
-  | PUT item IN celdas NL {world.put((String)$2,(Set<Cell>)$4);}
+  : PUT item IN celdas NL {world.put((String)$2,(Set<Cell>)$4);}
   | REM item IN celdas NL {System.out.println("rem de: "+ $2);}
-  | PUT unique_item IN celda NL {world.put((String)$2,(Cell)$4);System.out.println("put de item unico");} 
+  | PUT unique_item IN celda NL {world.put((String)$2,(Cell)$4);} 
   | REM unique_item IN celda NL {System.out.println("rem de item unico");}
-  | 'print' WORLD NL {world.print();}
+  | PRINT WORLD NL {world.print();}
   ; 
 
 celdas
@@ -64,21 +65,21 @@ unique_item : GOLD | HERO | WUMPUS ;
 aux: '?' | CONSTANT ;
 
 relation_list 
-  : relation ',' relation_list
+  : relation ',' relation_list //aca deberia hacer la union entre todos los sets no?
   | relation 
   ;
 
 relation
-  : expr op_rel expr{ //aca llama al metodo que }
+  : expr op_rel expr {$$ = world.applyBiPredicate((int[][])$1,(int[][])$3,(BiPredicate<Integer,Integer>)$2);}
   ;
 
 expr
-  : expr op_add term
+  : expr op_add term {$$ = world.applyBinaryOperator((int[][])$1,(int[][])$3,(BinaryOperator<Integer>)$2);}
   | term
   ;
 
 term 
-  : term op_mult factor
+  : term op_mult factor {$$ = world.applyBinaryOperator((int[][])$1,(int[][])$3,(BinaryOperator<Integer>)$2);}
   | factor
   ;
 
@@ -92,22 +93,22 @@ var
   | 'j' {$$= world.getJ();}
   ;
 
-op_add 
-  : 'x' 
-  | '-' { cada uno deberia devolver el binary oprator correspondiente}
-  ;  
-
-op_mult 
-  : '*' 
-  | '/' 
+op_add
+  : 'x' { $$ = Operators.ADD; }
+  | '-' { $$ = Operators.SUBTRACT; }
   ;
 
-op_rel 
-  : '==' 
-  | '<' 
-  | '>'
-  | '>=' 
-  | '<=' 
+op_mult
+  : '*' { $$ = Operators.MULTIPLY; }
+  | '/' { $$ = Operators.DIVIDE; }
+  ;
+
+op_rel
+  : '==' { $$ = Operators.EQUALS; }
+  | '<'  { $$ = Operators.LESS_THAN; }
+  | '>'  { $$ = Operators.GREATER_THAN; }
+  | '>=' { $$ = Operators.GREATER_THAN_OR_EQUALS; }
+  | '<=' { $$ = Operators.LESS_THAN_OR_EQUALS; }
   ;
 
 world_statement

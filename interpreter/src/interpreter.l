@@ -34,6 +34,8 @@ package org.unp.plp.interprete;
 
 %%
 
+"print"         {return Parser.PRINT; }
+
 "world"         {return Parser.WORLD; }
 
 "put"           {return Parser.PUT;}
