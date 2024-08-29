@@ -76,6 +76,11 @@ package org.unp.plp.interprete;
                   return Parser.NL;
                 }
 
+"<="           { return Parser.LEQ; }
+">="           { return Parser.GEQ; }
+"=="           { return Parser.EQ; }
+
+
 [+\-*/\[\],;:><=\?ijx] {
                           /** Deja pasar los caracteres únicos como literales **/
                           /** No es ninguna expresión regular, sólo los caracteres literales **/

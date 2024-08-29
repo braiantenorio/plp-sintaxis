@@ -28,6 +28,9 @@
 %token RBRACKET
 %token COMMA
 %token PRINT
+%token EQ  // ==
+%token GEQ // >=
+%token LEQ // <=
 
 %%
 
@@ -43,19 +46,19 @@ statement_list
 
 statement
   : PUT item IN celdas NL {world.put((String)$2,(Set<Cell>)$4);}
-  | REM item IN celdas NL {System.out.println("rem de: "+ $2);}
+  | REM item IN celdas NL {world.rem((String)$2,(Set<Cell>)$4);}
   | PUT unique_item IN celda NL {world.put((String)$2,(Cell)$4);} 
-  | REM unique_item IN celda NL {System.out.println("rem de item unico");}
+  | REM unique_item IN celda NL {world.rem((String)$2,(Cell)$4);}
   | PRINT WORLD NL {world.print();}
   ; 
 
 celdas
-  : '[' CONSTANT ',' CONSTANT ']' { Cell celda = new Cell((int)$2,(int)$4);Set<Cell> set = new HashSet<>();set.add(celda); $$= set;}
-  | '[' aux ',' aux ':' relation_list']' {$$= $6;}
+  : '[' CONSTANT ',' CONSTANT ']' { Cell celda = new Cell(((int)$2)-1,((int)$4)-1);Set<Cell> set = new HashSet<>();set.add(celda); $$= set;}
+  | '[' aux ',' aux ':' relation_list ']' {$$= $6;}
   ;
 
 celda
-  : '[' CONSTANT ',' CONSTANT ']' { $$= new Cell((int)$2,(int)$4);}
+  : '[' CONSTANT ',' CONSTANT ']' { $$= new Cell(((int)$2)-1,((int)$4)-1);}
   ;
 
 item : PIT ;
@@ -65,8 +68,15 @@ unique_item : GOLD | HERO | WUMPUS ;
 aux: '?' | CONSTANT ;
 
 relation_list 
-  : relation ',' relation_list //aca deberia hacer la union entre todos los sets no?
-  | relation 
+  : relation ',' relation_list { 
+      Set<Cell> result = (Set<Cell>)$1;
+      result.retainAll((Set<Cell>)$3);
+      //System.out.println((Set<Cell>)$1);
+      //System.out.println((Set<Cell>)$3);
+      System.out.println(result);
+      $$ = result;
+    }
+  | relation {$$ = $1;}
   ;
 
 relation
@@ -94,7 +104,7 @@ var
   ;
 
 op_add
-  : 'x' { $$ = Operators.ADD; }
+  : '+' { $$ = Operators.ADD; }
   | '-' { $$ = Operators.SUBTRACT; }
   ;
 
@@ -104,11 +114,11 @@ op_mult
   ;
 
 op_rel
-  : '==' { $$ = Operators.EQUALS; }
+  : EQ { $$ = Operators.EQUALS; }
   | '<'  { $$ = Operators.LESS_THAN; }
   | '>'  { $$ = Operators.GREATER_THAN; }
-  | '>=' { $$ = Operators.GREATER_THAN_OR_EQUALS; }
-  | '<=' { $$ = Operators.LESS_THAN_OR_EQUALS; }
+  | GEQ { $$ = Operators.GREATER_THAN_OR_EQUALS; }
+  | LEQ { $$ = Operators.LESS_THAN_OR_EQUALS; }
   ;
 
 world_statement

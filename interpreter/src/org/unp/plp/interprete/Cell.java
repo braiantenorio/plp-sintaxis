@@ -1,5 +1,7 @@
 package org.unp.plp.interprete;
 
+import java.util.Objects;
+
 public class Cell {
     private int row;
     private int column;
@@ -25,6 +27,24 @@ public class Cell {
         this.column = column;
     }
 
+
+    @Override
+    public String toString() {
+        return "(" +this.row + ", " + this.column + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cell cell = (Cell) o;
+        return row == cell.row && column == cell.column;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column);
+    }
 
 
     

@@ -22,6 +22,7 @@ public class WumpusWorld {
     vecinos.add(field[cell.getRow()][cell.getColumn() - 1]);
     vecinos.add(field[cell.getRow()][cell.getColumn() + 1]);
     vecinos.add(field[cell.getRow() + 1][cell.getColumn()]);
+    
     return vecinos;
   }
 
@@ -47,18 +48,35 @@ public class WumpusWorld {
     uniqueItems.put(item, cell);
   }
 
+  public void rem(String item, Set<Cell> cells) {
+    for (Cell cell : cells) {
+      if (field[cell.getRow()][cell.getColumn()].equals(item))
+        field[cell.getRow()][cell.getColumn()] = null;
+    }
+  }
+
+  public void rem(String item, Cell cell) {
+    // buscar el viejo
+    Cell last_ubi = uniqueItems.get(item);
+    if (last_ubi != null) {
+      field[last_ubi.getRow()][last_ubi.getColumn()] = null;
+      uniqueItems.remove(item);
+    }
+  }
+  
+
   public void print() {
-    System.out.println("world" + "," + this.filas + "," + this.filas);
+    System.out.println("world" + "," + this.filas + "," + this.columnas);
     for (int i = 0; i < field.length; i++) {
       for (int j = 0; j < field[i].length; j++) {
         if (field[i][j]!=null)
-        System.out.println(field[i][j] + "," + i + "," + j);
+        System.out.println(field[i][j] + "," + (i + 1) + "," + (j + 1));
       }
     }
   }
 
   public int[][] getConstant(int constant) {
-    int[][] matrix = new int[this.columnas][this.filas];
+    int[][] matrix = new int[this.filas][this.columnas];
     for (int i = 0; i < matrix.length; i++) {
       for (int j = 0; j < matrix[i].length; j++) {
         matrix[i][j] = constant;
@@ -68,9 +86,9 @@ public class WumpusWorld {
   }
 
   public int[][] getI() {
-    int[][] matrix = new int[this.columnas][this.filas];
-    for (int i = 0; i < this.columnas; i++) {
-      for (int j = 0; j < this.filas; j++) {
+    int[][] matrix = new int[this.filas][this.columnas];
+    for (int i = 0; i < matrix.length; i++) {
+      for (int j = 0; j < matrix[i].length; j++) {
         matrix[i][j] = i + 1;
       }
 
@@ -80,9 +98,9 @@ public class WumpusWorld {
   }
 
   public int[][] getJ() {
-    int[][] matrix = new int[this.columnas][this.filas];
-    for (int i = 0; i < this.columnas; i++) {
-      for (int j = 0; j < this.filas; j++) {
+    int[][] matrix = new int[this.filas][this.columnas];
+    for (int i = 0; i < matrix.length; i++) {
+      for (int j = 0; j < matrix[i].length; j++) {
         matrix[i][j] = j + 1;
       }
     }
