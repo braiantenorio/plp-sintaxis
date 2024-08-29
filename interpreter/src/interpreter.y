@@ -71,9 +71,6 @@ relation_list
   : relation ',' relation_list { 
       Set<Cell> result = (Set<Cell>)$1;
       result.retainAll((Set<Cell>)$3);
-      //System.out.println((Set<Cell>)$1);
-      //System.out.println((Set<Cell>)$3);
-      System.out.println(result);
       $$ = result;
     }
   | relation {$$ = $1;}

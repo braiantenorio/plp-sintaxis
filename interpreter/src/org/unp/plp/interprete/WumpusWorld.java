@@ -91,7 +91,6 @@ public class WumpusWorld {
       for (int j = 0; j < matrix[i].length; j++) {
         matrix[i][j] = i + 1;
       }
-
     }
     return matrix;
 
