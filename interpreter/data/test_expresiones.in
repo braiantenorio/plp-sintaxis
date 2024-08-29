@@ -1,3 +1,4 @@
 world 6x6
 put pit in [?, ? :i == j, i<3]
+rem pit in [1,1]
 print world
