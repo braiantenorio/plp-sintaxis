@@ -136,6 +136,17 @@ public class WumpusWorld {
       }
       return result;
   }
+
+  public Set<Cell> forma(int a, int b) {
+    Set<Cell> result = new HashSet<>();    
+    for (int i = 0; i < this.filas; i+= a) {
+      for (int j = 0; j < this.columnas; j++) {
+        result.add(new Cell(i, j)); 
+      }
+    }
+    return result;
+  }
+
   /*
    * i
    * 1 1 1 1
@@ -163,7 +174,7 @@ public class WumpusWorld {
    * el otro usar binaryoperator que llama apply
    * 
    * 
-   * 
+   * // doy vuelta i y j para hacer la transpuesta. osea para cambiar entre i y j
    * 
    * tambien hacer un metodo para la suma pero que haga operaciones de +*-
    */

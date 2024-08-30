@@ -1,4 +1,10 @@
 world 6x6
 put pit in [?, ? :i == j, i<3]
 rem pit in [1,1]
+put hero in [1,1]
+put gold in [6,6]
+put wumpus in [6,5]
+rem gold in [6,6]
+put gold in [3,3]
+put wumpus in [4,3]
 print world

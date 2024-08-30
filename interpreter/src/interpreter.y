@@ -61,6 +61,16 @@ celda
   : '[' CONSTANT ',' CONSTANT ']' { $$= new Cell(((int)$2)-1,((int)$4)-1);}
   ;
 
+forma
+  : var '=' CONSTANT 'N' op_add CONSTANT
+  | var '=' CONSTANT 'N' 
+  | var '=' 'N' {
+    Set<Cell> result = new HashSet<>();
+    $$= result;
+  }
+  | var '=' 'N' op_add CONSTANT
+  ;
+
 item : PIT ;
 
 unique_item : GOLD | HERO | WUMPUS ;
