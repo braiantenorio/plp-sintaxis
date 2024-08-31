@@ -54,7 +54,9 @@ statement
 
 celdas
   : '[' CONSTANT ',' CONSTANT ']' { Cell celda = new Cell(((int)$2)-1,((int)$4)-1);Set<Cell> set = new HashSet<>();set.add(celda); $$= set;}
-  | '[' aux ',' aux ':' relation_list ']' {$$= $6;}
+  | '[' '?' ',' '?' ':' relation_list ']' {$$= $6;}
+  | '[' CONSTANT ',' '?' ':' forma ']' {$$= world.filterI((Set<Cell>)$6,((int)$2)-1);}
+  | '[' '?' ',' CONSTANT ':' forma ']' {$$= world.filterJ((Set<Cell>)$6,((int)$4)-1);}
   ;
 
 celda
@@ -62,13 +64,14 @@ celda
   ;
 
 forma
-  : var '=' CONSTANT 'N' op_add CONSTANT
-  | var '=' CONSTANT 'N' 
-  | var '=' 'N' {
-    Set<Cell> result = new HashSet<>();
-    $$= result;
-  }
-  | var '=' 'N' op_add CONSTANT
+  : 'j' '=' CONSTANT 'N' op_add CONSTANT {$$= world.formaJ((int)$3,(int)$6,(BinaryOperator<Integer>)$5);}
+  | 'j' '=' CONSTANT 'N'  {$$= world.formaJ((int)$3,0,Operators.ADD);}
+  | 'j' '=' 'N' op_add CONSTANT {$$= world.formaJ(1,(int)$5,(BinaryOperator<Integer>)$4);}
+  | 'j' '=' 'N'  {$$= world.formaJ(1,0,Operators.ADD);}
+  | 'i' '=' CONSTANT 'N' op_add CONSTANT {$$= world.formaI((int)$3,(int)$6,(BinaryOperator<Integer>)$5);}
+  | 'i' '=' CONSTANT 'N'  {$$= world.formaI((int)$3,0,Operators.ADD);}
+  | 'i' '=' 'N' op_add CONSTANT {$$= world.formaI(1,(int)$5,(BinaryOperator<Integer>)$4);}
+  | 'i' '=' 'N'  {$$= world.formaI(1,0,Operators.ADD);}
   ;
 
 item : PIT ;

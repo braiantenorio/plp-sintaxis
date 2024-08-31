@@ -81,7 +81,7 @@ package org.unp.plp.interprete;
 "=="           { return Parser.EQ; }
 
 
-[+\-*/\[\],;:><=\?ijx] {
+[+\-*/\[\],;:><=\?ijxN] {
                           /** Deja pasar los caracteres únicos como literales **/
                           /** No es ninguna expresión regular, sólo los caracteres literales **/
                           yyparser.yylval = yytext();

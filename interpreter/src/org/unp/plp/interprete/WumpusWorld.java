@@ -56,14 +56,12 @@ public class WumpusWorld {
   }
 
   public void rem(String item, Cell cell) {
-    // buscar el viejo
     Cell last_ubi = uniqueItems.get(item);
     if (last_ubi != null) {
       field[last_ubi.getRow()][last_ubi.getColumn()] = null;
       uniqueItems.remove(item);
     }
   }
-  
 
   public void print() {
     System.out.println("world" + "," + this.filas + "," + this.columnas);
@@ -137,46 +135,62 @@ public class WumpusWorld {
       return result;
   }
 
-  public Set<Cell> forma(int a, int b) {
+  public Set<Cell> formaJ(int a, int b, BinaryOperator<Integer> operator) {
     Set<Cell> result = new HashSet<>();    
     for (int i = 0; i < this.filas; i+= a) {
       for (int j = 0; j < this.columnas; j++) {
-        result.add(new Cell(i, j)); 
+        try {
+          result.add(new Cell(( operator.apply(i,b))+1, j)); 
+        } catch (Exception e) {
+          // TODO: handle exception
+        }
       }
     }
     return result;
   }
 
-  /*
-   * i
-   * 1 1 1 1
-   * 2 2 2 2
-   * 3 3 3 3
-   * 4 4 4 4
-   * 
-   * j
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * metodo con binary operator para ><== y todo eso
-   * izq y der son matrices
-   * 
-   * 2 for para ambas matrices y un if.
-   * en el if le pusheo a un set un new cell
-   * 
-   * bipredicate que llama a test
-   * 
-   * el otro usar binaryoperator que llama apply
-   * 
-   * 
-   * // doy vuelta i y j para hacer la transpuesta. osea para cambiar entre i y j
-   * 
-   * tambien hacer un metodo para la suma pero que haga operaciones de +*-
-   */
+  public Set<Cell> formaI(int a, int b, BinaryOperator<Integer> operator) {
+    Set<Cell> result = new HashSet<>();    
+    for (int i = 0; i < this.filas; i+= a) {
+      for (int j = 0; j < this.columnas; j++) {
+        try {
+          result.add(new Cell(j, (operator.apply(i,b))+1)); 
+        } catch (Exception e) {
+          // TODO: handle exception
+        }
+      }
+    }
+    return result;
+  }
+
+
+  public Set<Cell> filterJ(Set<Cell> cells, int constant) {
+    Set<Cell> toRemove= new HashSet<>();
+    for (Cell cell : cells) {
+      if (cell.getColumn()!=constant) {
+        toRemove.add(cell);
+      }
+    }
+    cells.removeAll(toRemove);
+    System.out.println(toRemove);
+    return cells;
+    
+  }
+
+  public Set<Cell> filterI(Set<Cell> cells, int constant) {
+    System.out.println(cells);
+    System.out.println(constant);
+
+    Set<Cell> toRemove= new HashSet<>();
+    for (Cell cell : cells) {
+      if (cell.getRow()!=constant) {
+        toRemove.add(cell);
+      }
+    }
+    cells.removeAll(toRemove);
+    System.out.println(toRemove);
+    return cells;
+    
+  }
 
 }
