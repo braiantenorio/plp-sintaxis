@@ -55,6 +55,7 @@ public class WumpusWorld {
     }
   }
 
+  @Deprecated
   public void rem(String item, Cell cell) {
     Cell last_ubi = uniqueItems.get(item);
     if (last_ubi != null) {
